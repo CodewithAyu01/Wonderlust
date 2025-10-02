@@ -18,13 +18,6 @@
 - **Responsive Design:** Works seamlessly across desktop and mobile devices.
 - **Booking System:** Users can book travel stays in real-time.
 - **Admin Panel:** Manage listings and users efficiently.
-
-## Demo
-Live Demo: [Insert live link here]  
-Screenshots:  
-![Homepage](./screenshots/homepage.png)  
-![Listing Details](./screenshots/listing-details.png)  
-
 ## Technologies
 - **Frontend:** HTML, CSS, EJS
 - **Backend:** Node.js, Express.js
