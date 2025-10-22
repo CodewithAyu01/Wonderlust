@@ -1,3 +1,4 @@
+// Load environment variables (for local development)
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
@@ -17,6 +18,24 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 
+// Cloudinary setup
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "wanderlust_DEV",
+    allowedFormats: ["png", "jpg", "jpeg"],
+  },
+});
+
 // Express routes
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
@@ -26,8 +45,8 @@ const userRouter = require("./routes/user.js");
 const dbUrl = process.env.ATLASDB_URL;
 
 mongoose
-  .connect(dbUrl)
-  .then(() => console.log("Connected to MongoDB"))
+  .connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("Connected to MongoDB Atlas"))
   .catch((err) => console.log("MongoDB connection error:", err));
 
 // Express config
@@ -55,9 +74,9 @@ const sessionOptions = {
   resave: false,
   saveUninitialized: true,
   cookie: {
+    httpOnly: true,
     expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
     maxAge: 7 * 24 * 60 * 60 * 1000,
-    httpOnly: true,
   },
 };
 
@@ -91,6 +110,7 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-app.listen(8080, () => {
-  console.log("Server is running on port 8080");
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
