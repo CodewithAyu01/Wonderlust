@@ -10,13 +10,13 @@ const listingSchema= new Schema({
     },
     description: String,
     image: {
-  url: {
-    type: String,
-    default: "https://unsplash.com/photos/a-living-room-with-a-large-green-couch-VZ2z8ozzy10",
-     set: (v) => v === ""? "https://unsplash.com/photos/a-living-room-with-a-large-green-couch-VZ2z8ozzy10" : v,
-  },
-    filename: String,
-},
+        url: {
+            type: String,
+            default: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+            set: (v) => v === "" ? "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" : v,
+        },
+        filename: String,
+    },
     price: Number,
     location: String,
     country: String,
@@ -30,16 +30,16 @@ const listingSchema= new Schema({
       type: Schema.Types.ObjectId,
       ref: "User"
     }, 
-    geometry:{
-       type: {
-      type: String, // Don't do `{ location: { type: String } }`
-      enum: ['Point'], // 'location.type' must be 'Point'
-      required: true
-    },
-    coordinates: {
-      type: [Number],
-      required: true
-    }
+    geometry: {
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: false
+        },
+        coordinates: {
+            type: [Number],
+            required: false
+        }
     }
 });
 listingSchema.post('findOneAndDelete', async (listing) =>{

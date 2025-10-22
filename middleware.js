@@ -1,6 +1,6 @@
 const Listing = require("./models/listing");
 const Review = require("./models/review");
-const ExpressError = require("./utlis/ExpressError.js");
+const ExpressError = require("./utils/ExpressError.js");
 const {listingSchema, reviewSchema} = require("./schema.js");
 
 
@@ -28,7 +28,7 @@ module.exports.isOwner = async (req, res, next)=>{
     let {id} = req.params;
     let listing = await Listing.findById(id);
     
-     if(!listing.owner.equals(res.locals.currUser._id)){
+    if(!res.locals.currUser || !listing.owner.equals(res.locals.currUser._id)){
         req.flash("error", "You Don't have access");
         return res.redirect(`/listings/${id}`);
     }
@@ -66,7 +66,7 @@ module.exports.validateReview = ((req, res, next) => {
 module.exports.isReviewAuthor = async(req ,res, next)=>{
     let {id ,reviewId} =req.params;
     let review = await Review.findById(reviewId);
-    if(!review.author.equals(res.locals.currUser._id)){
+    if(!res.locals.currUser || !review.author.equals(res.locals.currUser._id)){
         req.flash("error", "You Don't have access");
         return res.redirect(`/listings/${id}`);
     }

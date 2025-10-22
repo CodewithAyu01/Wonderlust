@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router({mergeParams: true}); //it gets id from parent route(ID nhi le pate iske bina aap.js se EX: /listing/:id)
 const Review = require("../models/review.js");
-const wrapAsync = require("../utlis/wrapAsync.js");
+const wrapAsync = require("../utils/wrapAsync.js");
 const Listing = require("../models/listing.js");
 const{validateReview, isLoggedIn, isReviewAuthor} = require("../middleware.js");
 const reviewsController = require("../controllers/reviews.js");
