@@ -1,4 +1,4 @@
-# WanderLust - Travel Listings App
+# WonderLust - Travel Listings App
 
 A Node.js web application for managing travel listings with user authentication, reviews, and image uploads.
 

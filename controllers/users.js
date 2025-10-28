@@ -33,7 +33,7 @@ module.exports.renderLoginForm = (req,res)=>{
 };
 
 module.exports.login = async(req,res)=>{      // passport.authenticate("Stragey",OPtions) this middleware is used to authenticate user 
-    req.flash("success", "Welcome to WanderLust");
+    req.flash("success", "Welcome to WonderLust");
 
      //middleware.js
      //isLoggedIn is  not triggered for log in page thats why when user login using login button then we redirect to listings 
