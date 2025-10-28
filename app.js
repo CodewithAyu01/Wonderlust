@@ -22,15 +22,18 @@ const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
 // ✅ MongoDB connection (Render + Local both handled)
-const dbUrl = process.env.MONGO_URI || process.env.ATLASDB_URL;
+const dbUrl = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/wonderlust";
 
 if (!dbUrl) {
-  console.error("❌ MongoDB URI not found! Please set MONGO_URI or ATLASDB_URL in environment variables.");
+  console.error("❌ MongoDB URI not found! Please set MONGO_URI in environment variables.");
   process.exit(1);
 }
 
 mongoose
-  .connect(dbUrl)
+  .connect(dbUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("✅ MongoDB connected successfully"))
   .catch((err) => console.log("❌ MongoDB connection error:", err));
 
@@ -42,7 +45,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
-// Session setup
+// ✅ Session setup (store sessions in Mongo Atlas)
 const store = MongoStore.create({
   mongoUrl: dbUrl,
   crypto: { secret: process.env.SECRET || "thisshouldbeabettersecret" },
@@ -60,6 +63,7 @@ const sessionOptions = {
   saveUninitialized: true,
   cookie: {
     httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // ✅ required for Render HTTPS
     expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
     maxAge: 7 * 24 * 60 * 60 * 1000,
   },
@@ -68,14 +72,14 @@ const sessionOptions = {
 app.use(session(sessionOptions));
 app.use(flash());
 
-// Passport setup
+// ✅ Passport setup
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// Flash + Current User middleware
+// ✅ Flash + Current User middleware
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
