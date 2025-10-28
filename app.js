@@ -21,8 +21,13 @@ const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
-// MongoDB connection
-const dbUrl = process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/wonderlust";
+// ✅ MongoDB connection (Render + Local both handled)
+const dbUrl = process.env.MONGO_URI || process.env.ATLASDB_URL;
+
+if (!dbUrl) {
+  console.error("❌ MongoDB URI not found! Please set MONGO_URI or ATLASDB_URL in environment variables.");
+  process.exit(1);
+}
 
 mongoose
   .connect(dbUrl)
@@ -41,7 +46,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const store = MongoStore.create({
   mongoUrl: dbUrl,
   crypto: { secret: process.env.SECRET || "thisshouldbeabettersecret" },
-  touchAfter: 24 * 3600,
+  touchAfter: 24 * 3600, // update session only once every 24 hours
 });
 
 store.on("error", (err) => {
