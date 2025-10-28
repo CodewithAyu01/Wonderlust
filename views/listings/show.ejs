@@ -1,0 +1,6 @@
+<h1><%= listing.title %></h1>
+<img src="<%= listing.image.url %>" alt="Listing Image" style="max-width:400px;" />
+<p><i><b>Owned by:</b> <%= listing.owner ? listing.owner.username : "Unknown" %></i></p>
+<p><%= listing.description %></p>
+<p><b>Price:</b> &#8377;<%= listing.price.toLocaleString("en-IN") %></p>
+<p><b>Location:</b> <%= listing.location %>, <%= listing.country %></p>
