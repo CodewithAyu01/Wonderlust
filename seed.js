@@ -2,7 +2,7 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const Listing = require("./models/listing");
 const User = require("./models/user");
-const { data: sampleListings } = require("./seeds/data.js");
+const { data: sampleListings } = require("./seeds/data.js"); // ✅ correct import
 
 const dbUrl = process.env.MONGO_URI;
 
@@ -22,6 +22,11 @@ main()
     const user = new User({ username: "Ayushi", email: "ayushi@example.com" });
     const registeredUser = await User.register(user, "ayushi123");
     console.log("👤 Dummy user created:", registeredUser.username);
+
+    // ✅ Ensure sampleListings is defined and has data
+    if (!sampleListings || !Array.isArray(sampleListings)) {
+      throw new Error("❌ sampleListings is not defined or not an array!");
+    }
 
     // Add this user's _id as owner for all listings
     const listingsWithOwner = sampleListings.map((listing) => ({
